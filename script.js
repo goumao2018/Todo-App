@@ -1,5 +1,6 @@
 
-(function() {
+var yujinsSweetSweetTodoList = (function() {
+    var count = 0;
     var state = [
         {
             id: 1,
@@ -25,14 +26,56 @@
     var rootElement = document.getElementById('root');
     var formElement = document.getElementById('form');
     var inputElement = document.getElementById('addTodoInput');
-    var checkboxStatus = document.getElementsByTagName('INPUT');
     var nextId = 999;
 
     // functions that return values
+    function createCheckboxElement(todo){
+        var checkboxElement = document.createElement('INPUT');
+        checkboxElement.id = todo.id;
+        checkboxElement.type = "checkbox";
+        checkboxElement.checked = todo.done; 
+        checkboxElement.addEventListener('change', handleDoneTodo)
+        return checkboxElement;
+    }
+
+    function createLabelElement(todo) {
+        var labelElement = document.createElement('label');
+        labelElement.htmlFor = todo.id;
+        labelElement.innerText = todo.content;
+        if (todo.done === true){
+            var str = labelElement.innerText;
+            var result = str.strike(); 
+            labelElement.innerHTML=result;
+        }
+        return labelElement;
+    }
+
+    function createDeleteButton(eventHandler) {
+        var deleteButton = document.createElement('button');
+        deleteButton.type = 'button';
+        deleteButton.innerText = 'x';
+        deleteButton.addEventListener('click', eventHandler);
+        return deleteButton;
+    }
+
+    function createListElement(todo) {
+        var listElement = document.createElement('li');
+        var checkboxElement = createCheckboxElement(todo);
+        var labelElement = createLabelElement(todo);
+        var deleteButton = createDeleteButton(handleDeleteTodo);
+        
+        // DOM stuff
+        listElement.appendChild(checkboxElement);
+        listElement.appendChild(labelElement);
+        listElement.appendChild(deleteButton);
+        return listElement; 
+    }
 
     // functions that have side effects
 
     function handleSubmit(event) {
+        count++;
+        console.log(`handleSubmit called ${count} times`);
         event.preventDefault();
         var newTodo = {
             id: nextId,
@@ -43,36 +86,25 @@
         state.push(newTodo);
 
         render();
-
     }
     
-    function renderTodo(todo) {
-        var listElement = document.createElement('li');
-        var checkboxElement = document.createElement('INPUT');
-        checkboxElement.id = todo.id;
-        checkboxElement.type = "checkbox";
-        checkboxElement.checked = todo.done; 
 
-        var labelElement = document.createElement('label');
-        labelElement.htmlFor = todo.id;
-        labelElement.innerText = todo.content;
 
-        var deleteButton = document.createElement('button');
-        deleteButton.type = 'button';
-        deleteButton.innerText = 'x';
-        deleteButton.addEventListener('click', handleDeleteTodo);
+    function handleDoneTodo(event) {
+        console.log(event.target.id, typeof event.target.id );
+        var labelElementId = Number(event.target.id);
+        state.forEach(function(todo) {
+            if (todo.id === labelElementId) {
+                todo.done = !todo.done;
+            }
+        });
         
-        rootElement.appendChild(listElement);
-        listElement.appendChild(checkboxElement);
-        listElement.appendChild(labelElement);
-        listElement.appendChild(deleteButton);
-
-        
+        render();
     }
+
     function handleDeleteTodo(event) {
         event.preventDefault();
         var listElement = event.target.parentElement;
-        // rootElement.removeChild(listElement);
         var labelElement = listElement.querySelector('label');
         var todoId = Number(labelElement.htmlFor);
         function findTodoById(item){
@@ -85,28 +117,21 @@
 
     function render() {
         rootElement.innerHTML = '';
-        state.forEach(function(todo){
-            renderTodo(todo);     
+        state.forEach(function(todo){    
+            rootElement.appendChild(createListElement(todo));
         })       
     };
 
     render();
 
-
-    // function testfunction(){
-    //     // var test = document.querySelectorAll("li");
-    //     // var test1 = test[1].getAttribute("checked");
-    //     console.log('hey');
-            
-    // }
-
-    // testfunction();
-
-    // document.getElementById('todoStatus').addEventListener('click', changeTodoStatus);
     formElement.addEventListener('submit', handleSubmit);
 
-    // document.getElementById('woo').addEventListener('click', testfunction)
-
+    return {
+        createCheckboxElement: createCheckboxElement,
+        createLabelElement: createLabelElement,
+        createDeleteButton: createDeleteButton,
+        createListElement: createListElement,
+    }
 
 })();
 
@@ -114,8 +139,7 @@
 
 /** 
  * TODO: 
- * ---Add delete button
  * styles
- * striketrhough for done items
+ * clear input onSubmit
  * write tests
  * */ 
