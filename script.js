@@ -26,6 +26,7 @@ var yujinsSweetSweetTodoList = (function() {
     var rootElement = document.getElementById('root');
     var formElement = document.getElementById('form');
     var inputElement = document.getElementById('addTodoInput');
+    var completedBtn = document.getElementById('completedBtn');
     var nextId = 999;
 
     // functions that return values
@@ -85,10 +86,11 @@ var yujinsSweetSweetTodoList = (function() {
         nextId++;
         state.push(newTodo);
 
-        render();
+        render(state);
+
+        formElement.reset();
     }
     
-
 
     function handleDoneTodo(event) {
         console.log(event.target.id, typeof event.target.id );
@@ -99,7 +101,7 @@ var yujinsSweetSweetTodoList = (function() {
             }
         });
         
-        render();
+        render(state);
     }
 
     function handleDeleteTodo(event) {
@@ -112,19 +114,29 @@ var yujinsSweetSweetTodoList = (function() {
         }
         var todoIndex = state.findIndex(findTodoById);
         state.splice(todoIndex,1)
-        render();
+        render(state);
     }
 
-    function render() {
+    function filterCompletedTodo() {
+        var filteredTodos = state.filter(function(todo) {
+            if(todo.done) {
+                return todo
+            }
+        });
+        render(filteredTodos);
+    }
+
+    function render(todos) {
         rootElement.innerHTML = '';
-        state.forEach(function(todo){    
+        todos.forEach(function(todo){    
             rootElement.appendChild(createListElement(todo));
         })       
     };
 
-    render();
+    render(state);
 
     formElement.addEventListener('submit', handleSubmit);
+    completedBtn.addEventListener('click', filterCompletedTodo)
 
     return {
         createCheckboxElement: createCheckboxElement,
@@ -140,6 +152,6 @@ var yujinsSweetSweetTodoList = (function() {
 /** 
  * TODO: 
  * styles
- * clear input onSubmit
  * write tests
+ * add filters
  * */ 
