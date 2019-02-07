@@ -1,39 +1,29 @@
 <html>
   <head>
-    <!--Import Google Icon Font-->
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <!--Import materialize.css-->
-    <link
-      type="text/css"
-      rel="stylesheet"
-      href="css/materialize.min.css"
-      media="screen,projection"
-    />
-
-    <!--Let browser know website is optimized for mobile-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
   <body>
-    <h1>Todo list</h1>
-    <form id="form">
-      <input id="addTodoInput" type="text" /> <input type="submit" />
-    </form>
-    <button id="allBtn">All</button> <button id="activeBtn">Active</button>
-    <button id="completedBtn">Completed</button>
-    <button id="removedBtn">Removed</button>
-    <ul id="root"></ul>
-    <!-- <ul id='test'>
-            <li>
-                <input id='5' type='checkbox' checked>
-                <label for='5'>drink coffee</label>
-                <button>x</button>
-            </li>
-    
-        </ul> -->
-    <p id="demo"></p>
+    <div class="container">
+      <h1>Todo list</h1>
+      <form id="form">
+        <div class="input-container">
+          <input
+            class="input-field"
+            placeholder="Enter things todo"
+            id="addTodoInput"
+            type="text"
+          />
+          <span class="underline"></span>
+          <input class="submit-btn" type="submit" value="Add" />
+        </div>
+      </form>
+      <button class="btn" id="allBtn">All</button>
+      <button class="btn" id="activeBtn">Active</button>
+      <button class="btn" id="completedBtn">Completed</button>
+      <button class="btn" id="removedBtn">Removed</button>
+
+      <ul id="root"></ul>
+    </div>
     <script src="./script.js"></script>
     <script src="./test.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>

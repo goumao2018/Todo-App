@@ -46,6 +46,7 @@ var yujinsSweetSweetTodoList = (function() {
   function createCheckboxElement(todo) {
     var checkboxElement = document.createElement("INPUT");
     checkboxElement.id = todo.id;
+    checkboxElement.classList.add("checkbox");
     checkboxElement.type = "checkbox";
     checkboxElement.checked = todo.done;
     checkboxElement.addEventListener("change", toggleTodo);
@@ -89,7 +90,6 @@ var yujinsSweetSweetTodoList = (function() {
 
   function handleSubmit(event) {
     count++;
-    console.log(`handleSubmit called ${count} times`);
     event.preventDefault();
     var newTodo = {
       id: nextId,
@@ -150,6 +150,7 @@ var yujinsSweetSweetTodoList = (function() {
         return todo;
       }
       if (state.filter === REMOVED && todo.delete) {
+        console.log("wuttttt");
         return todo;
       }
     });
