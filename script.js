@@ -11,7 +11,7 @@ var yujinsSweetSweetTodoList = (function() {
         id: 1,
         done: false,
         content: "sing a song",
-        delete: false
+        delete: true
       },
       {
         id: 2,
@@ -99,7 +99,6 @@ var yujinsSweetSweetTodoList = (function() {
     };
     nextId++;
     state.todos.push(newTodo);
-    console.log(state);
 
     render(state);
 
@@ -128,29 +127,21 @@ var yujinsSweetSweetTodoList = (function() {
     }
 
     state.todos.find(findDeleteTodo).delete = true;
-
-    function findTodoById(item) {
-      return item.id === todoId;
-    }
-
-    var todoIndex = state.todos.findIndex(findTodoById);
-    state.todos.splice(todoIndex, 1);
     render(state);
   }
 
   function filterTodos(state) {
     return state.todos.filter(function(todo) {
-      if (state.filter === COMPLETED && todo.done) {
+      if (state.filter === COMPLETED && todo.done && !todo.delete) {
         return todo;
       }
-      if (state.filter === ACTIVE && !todo.done) {
+      if (state.filter === ACTIVE && !todo.done && !todo.delete) {
         return todo;
       }
-      if (state.filter === NONE) {
+      if (state.filter === NONE && !todo.delete) {
         return todo;
       }
       if (state.filter === REMOVED && todo.delete) {
-        console.log("wuttttt");
         return todo;
       }
     });
@@ -195,10 +186,9 @@ var yujinsSweetSweetTodoList = (function() {
     filterTodos: filterTodos
   };
 })();
-
 /**
  * TODO:
- * styles
  * write tests
- * add removed filter
+ * deploy to gh pages
+ * learn and use redux?
  * */
