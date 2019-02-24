@@ -1,5 +1,4 @@
 var yujinsSweetSweetTodoList = (function() {
-  var count = 0;
   var NONE = "NONE";
   var COMPLETED = "COMPLETED";
   var ACTIVE = "ACTIVE";
