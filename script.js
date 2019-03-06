@@ -1,4 +1,4 @@
-var yujinsSweetSweetTodoList = (function() {
+var yujinsSweetSweetTodoList = (function () {
   var NONE = "NONE";
   var COMPLETED = "COMPLETED";
   var ACTIVE = "ACTIVE";
@@ -51,11 +51,12 @@ var yujinsSweetSweetTodoList = (function() {
     checkboxElement.addEventListener("change", toggleTodo);
     return checkboxElement;
   }
-
+  console.log(Redux, 'heyyyyyyyyyyyy');
   function createLabelElement(todo) {
     var labelElement = document.createElement("label");
     labelElement.htmlFor = todo.id;
     labelElement.innerText = todo.content;
+
     if (todo.done === true) {
       var str = labelElement.innerText;
       var result = str.strike();
@@ -64,11 +65,11 @@ var yujinsSweetSweetTodoList = (function() {
     return labelElement;
   }
 
-  function createDeleteButton(eventHandler) {
+  function createDeleteButton(functionWithActionsToCompleteOnClick) {
     var deleteButton = document.createElement("button");
     deleteButton.type = "button";
     deleteButton.innerText = "x";
-    deleteButton.addEventListener("click", eventHandler);
+    deleteButton.addEventListener("click", functionWithActionsToCompleteOnClick);
     return deleteButton;
   }
 
@@ -106,7 +107,7 @@ var yujinsSweetSweetTodoList = (function() {
 
   function toggleTodo(event) {
     var labelElementId = Number(event.target.id);
-    state.todos.forEach(function(todo) {
+    state.todos.forEach(function (todo) {
       if (todo.id === labelElementId) {
         todo.done = !todo.done;
       }
@@ -120,7 +121,6 @@ var yujinsSweetSweetTodoList = (function() {
     var listElement = event.target.parentElement;
     var labelElement = listElement.querySelector("label");
     var todoId = Number(labelElement.htmlFor);
-
     function findDeleteTodo(item) {
       return item.id === todoId;
     }
@@ -130,7 +130,7 @@ var yujinsSweetSweetTodoList = (function() {
   }
 
   function filterTodos(state) {
-    return state.todos.filter(function(todo) {
+    return state.todos.filter(function (todo) {
       if (state.filter === COMPLETED && todo.done && !todo.delete) {
         return todo;
       }
@@ -149,7 +149,7 @@ var yujinsSweetSweetTodoList = (function() {
   function render(state) {
     rootElement.innerHTML = "";
     const filteredTodos = filterTodos(state);
-    filteredTodos.forEach(function(todo) {
+    filteredTodos.forEach(function (todo) {
       rootElement.appendChild(createListElement(todo));
     });
   }
@@ -191,3 +191,4 @@ var yujinsSweetSweetTodoList = (function() {
  * deploy to gh pages
  * learn and use redux?
  * */
+

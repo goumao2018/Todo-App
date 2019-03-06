@@ -17,13 +17,20 @@ function expect(left) {
 }
 
 (function () {
-  var checkbox = yujinsSweetSweetTodoList.createCheckboxElement(function () { });
+  var todo = {
+    id: 1,
+    done: false,
+    content: "sing a song",
+    delete: true
+  }
+  var checkbox = yujinsSweetSweetTodoList.createCheckboxElement(todo);
   expect(checkbox.type).toEqual("checkbox");
+  expect(checkbox.id).toEqual("1");
   console.log("createCheckboxElement() is a checkbox element");
 })();
 
 (function () {
-  let todo = {
+  var todo = {
     id: 1,
     done: false,
     content: "sing a song",
@@ -36,8 +43,24 @@ function expect(left) {
 })();
 
 (function () {
-  var delButton = yujinsSweetSweetTodoList.createDeleteButton(function () { });
+  var count = 0;
+  function addOne() {
+    // update the count
+    count = count + 1;
+  };
+  // create button
+  var delButton = yujinsSweetSweetTodoList.createDeleteButton(addOne);
+
+  // click button
+  delButton.click()
+
+  // expect the button was created
   expect(delButton.type).toEqual("button");
+
+  // expect the handler was clicked
+  expect(count).toEqual(1)
+  // todo
+
   console.log("createDeleteButton() is a button element");
 })();
 
