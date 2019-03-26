@@ -1,8 +1,16 @@
 var yujinsSweetSweetTodoList = (function () {
+  // Action types
+  var CHANGE_FILTER = "CHANGE_FILTER";
+  var ADD_TODO = "ADD_TODO";
+  var DELETE_TODO = "DELETE_TODO";
+  var TOGGLE_TODO = "TOGGLE_TODO";
+
+  // Filters
   var NONE = "NONE";
   var COMPLETED = "COMPLETED";
   var ACTIVE = "ACTIVE";
   var REMOVED = "REMOVED";
+
   var state = {
     filter: NONE,
     todos: [
@@ -32,6 +40,44 @@ var yujinsSweetSweetTodoList = (function () {
       }
     ]
   };
+
+  function reducer(state, action) {
+    switch(action.type){
+      case CHANGE_FILTER: {
+        return { ...state, filter: action.payload }
+      }
+      case ADD_TODO: {
+        return {
+          ...state, 
+          todos: [
+            ...state.todos, 
+            {
+              id: action.payload.id,
+              done: false,
+              content: action.payload.content,
+              delete: false
+            }
+          ]
+        }
+      }
+
+      case DELETE_TODO: { 
+
+      }
+
+      case TOGGLE_TODO: {
+
+      }
+
+      default: {
+        return state;
+      }
+    }
+  }
+
+  // Initialise redux
+  const store = Redux.createStore(reducer, state);
+
   var rootElement = document.getElementById("root");
   var formElement = document.getElementById("form");
   var inputElement = document.getElementById("addTodoInput");
@@ -89,7 +135,6 @@ var yujinsSweetSweetTodoList = (function () {
   // functions that have side effects
 
   function handleSubmit(event) {
-    count++;
     event.preventDefault();
     var newTodo = {
       id: nextId,
@@ -98,6 +143,14 @@ var yujinsSweetSweetTodoList = (function () {
       delete: false
     };
     nextId++;
+
+    store.dispatch({
+      type: ADD_TODO,
+      payload: {
+        content: inputElement.value,
+        id: nextId,
+      }
+    })
     state.todos.push(newTodo);
 
     render(state);
@@ -114,6 +167,10 @@ var yujinsSweetSweetTodoList = (function () {
     });
 
     render(state);
+    store.dispatch({
+      type: 'CREATE_AREOPLANE',
+      payload: labelElementId,
+    })
   }
 
   function handleDeleteTodo(event) {
@@ -177,6 +234,12 @@ var yujinsSweetSweetTodoList = (function () {
   activeBtn.addEventListener("click", handleFilterClick);
   removedBtn.addEventListener("click", handleFilterClick);
 
+  store.subscribe(function() {
+    var state = store.getState();
+    console.log("hey state updated", state)
+  })
+
+  
   return {
     createCheckboxElement: createCheckboxElement,
     createLabelElement: createLabelElement,
