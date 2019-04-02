@@ -42,6 +42,7 @@ var yujinsSweetSweetTodoList = (function () {
   };
 
   function reducer(state, action) {
+    console.log("reducer was called")
     switch(action.type){
       case CHANGE_FILTER: {
         return { ...state, filter: action.payload }
@@ -61,11 +62,17 @@ var yujinsSweetSweetTodoList = (function () {
         }
       }
 
+
+
       case DELETE_TODO: { 
 
       }
 
       case TOGGLE_TODO: {
+       
+      }
+
+      case CHANGE_FILTER: {
 
       }
 
@@ -97,7 +104,7 @@ var yujinsSweetSweetTodoList = (function () {
     checkboxElement.addEventListener("change", toggleTodo);
     return checkboxElement;
   }
-  console.log(Redux, 'heyyyyyyyyyyyy');
+
   function createLabelElement(todo) {
     var labelElement = document.createElement("label");
     labelElement.htmlFor = todo.id;
@@ -168,7 +175,7 @@ var yujinsSweetSweetTodoList = (function () {
 
     render(state);
     store.dispatch({
-      type: 'CREATE_AREOPLANE',
+      type: TOGGLE_TODO,
       payload: labelElementId,
     })
   }
@@ -184,6 +191,10 @@ var yujinsSweetSweetTodoList = (function () {
 
     state.todos.find(findDeleteTodo).delete = true;
     render(state);
+    store.dispatch({
+      type: DELETE_TODO,
+      payload: todoId,
+    })
   }
 
   function filterTodos(state) {
@@ -212,18 +223,23 @@ var yujinsSweetSweetTodoList = (function () {
   }
 
   function handleFilterClick(event) {
+    let newFilter;
     if (event.srcElement.id === "completedBtn") {
-      state.filter = COMPLETED;
+      newFilter = COMPLETED;
     } else if (event.srcElement.id === "activeBtn") {
-      state.filter = ACTIVE;
+      newFilter = ACTIVE;
     } else if (event.srcElement.id === "deleteBtn") {
-      state.filter = DONE;
+      newFilter = DONE;
     } else if (event.srcElement.id === "removedBtn") {
-      state.filter = REMOVED;
+      newFilter = REMOVED;
     } else {
-      state.filter = NONE;
+      newFilter = NONE;
     }
     render(state);
+    store.dispatch({
+      type: CHANGE_FILTER,
+      payload: newFilter,
+    })
   }
 
   render(state);
@@ -235,8 +251,8 @@ var yujinsSweetSweetTodoList = (function () {
   removedBtn.addEventListener("click", handleFilterClick);
 
   store.subscribe(function() {
-    var state = store.getState();
-    console.log("hey state updated", state)
+    var s = store.getState();
+    console.log("hey state updated", s)
   })
 
   
@@ -253,5 +269,12 @@ var yujinsSweetSweetTodoList = (function () {
  * write tests
  * deploy to gh pages
  * learn and use redux?
+ * 
+ * discussion topics
+ * how did we begin
+ * what problems we are trying to solve 
+ * global scope and modules 
+ * IIFE 
+ * 
  * */
 
