@@ -1,4 +1,4 @@
-var yujinsSweetSweetTodoList = (function () {
+var yujinsSweetSweetTodoList = (function() {
   // Action types
   var CHANGE_FILTER = "CHANGE_FILTER";
   var ADD_TODO = "ADD_TODO";
@@ -11,47 +11,21 @@ var yujinsSweetSweetTodoList = (function () {
   var ACTIVE = "ACTIVE";
   var REMOVED = "REMOVED";
 
-  var state = {
+  var initialState = {
     filter: NONE,
-    todos: [
-      {
-        id: 1,
-        done: false,
-        content: "sing a song",
-        delete: true
-      },
-      {
-        id: 2,
-        done: true,
-        content: "study javascript",
-        delete: false
-      },
-      {
-        id: 3,
-        done: true,
-        content: "drink coffee",
-        delete: false
-      },
-      {
-        id: 4,
-        done: false,
-        content: "GOODBYE Media :((((((",
-        delete: false
-      }
-    ]
+    todos: []
   };
 
   function reducer(state, action) {
-    console.log("reducer was called")
-    switch(action.type){
+    switch (action.type) {
       case CHANGE_FILTER: {
-        return { ...state, filter: action.payload }
+        return { ...state, filter: action.payload };
       }
       case ADD_TODO: {
         return {
-          ...state, 
+          ...state,
           todos: [
-            ...state.todos, 
+            ...state.todos,
             {
               id: action.payload.id,
               done: false,
@@ -59,23 +33,36 @@ var yujinsSweetSweetTodoList = (function () {
               delete: false
             }
           ]
-        }
+        };
       }
-
-
-
-      case DELETE_TODO: { 
-
+      case DELETE_TODO: {
+        return {
+          ...state,
+          todos: state.todos.map(eachTodo => {
+            if (action.payload === eachTodo.id) {
+              return {
+                ...eachTodo,
+                delete: true
+              };
+            }
+            return eachTodo;
+          })
+        };
       }
-
       case TOGGLE_TODO: {
-       
+        return {
+          ...state,
+          todos: state.todos.map(todo => {
+            if (action.payload === todo.id) {
+              return {
+                ...todo,
+                done: !todo.done
+              };
+            }
+            return todo;
+          })
+        };
       }
-
-      case CHANGE_FILTER: {
-
-      }
-
       default: {
         return state;
       }
@@ -83,7 +70,7 @@ var yujinsSweetSweetTodoList = (function () {
   }
 
   // Initialise redux
-  const store = Redux.createStore(reducer, state);
+  const store = Redux.createStore(reducer, initialState);
 
   var rootElement = document.getElementById("root");
   var formElement = document.getElementById("form");
@@ -122,7 +109,10 @@ var yujinsSweetSweetTodoList = (function () {
     var deleteButton = document.createElement("button");
     deleteButton.type = "button";
     deleteButton.innerText = "x";
-    deleteButton.addEventListener("click", functionWithActionsToCompleteOnClick);
+    deleteButton.addEventListener(
+      "click",
+      functionWithActionsToCompleteOnClick
+    );
     return deleteButton;
   }
 
@@ -155,29 +145,21 @@ var yujinsSweetSweetTodoList = (function () {
       type: ADD_TODO,
       payload: {
         content: inputElement.value,
-        id: nextId,
+        id: nextId
       }
-    })
+    });
     state.todos.push(newTodo);
-
-    render(state);
 
     formElement.reset();
   }
 
   function toggleTodo(event) {
     var labelElementId = Number(event.target.id);
-    state.todos.forEach(function (todo) {
-      if (todo.id === labelElementId) {
-        todo.done = !todo.done;
-      }
-    });
 
-    render(state);
     store.dispatch({
       type: TOGGLE_TODO,
-      payload: labelElementId,
-    })
+      payload: labelElementId
+    });
   }
 
   function handleDeleteTodo(event) {
@@ -185,20 +167,15 @@ var yujinsSweetSweetTodoList = (function () {
     var listElement = event.target.parentElement;
     var labelElement = listElement.querySelector("label");
     var todoId = Number(labelElement.htmlFor);
-    function findDeleteTodo(item) {
-      return item.id === todoId;
-    }
 
-    state.todos.find(findDeleteTodo).delete = true;
-    render(state);
     store.dispatch({
       type: DELETE_TODO,
-      payload: todoId,
-    })
+      payload: todoId
+    });
   }
 
   function filterTodos(state) {
-    return state.todos.filter(function (todo) {
+    return state.todos.filter(function(todo) {
       if (state.filter === COMPLETED && todo.done && !todo.delete) {
         return todo;
       }
@@ -214,10 +191,11 @@ var yujinsSweetSweetTodoList = (function () {
     });
   }
 
-  function render(state) {
+  function render() {
+    var reduxState = store.getState();
     rootElement.innerHTML = "";
-    const filteredTodos = filterTodos(state);
-    filteredTodos.forEach(function (todo) {
+    const filteredTodos = filterTodos(reduxState);
+    filteredTodos.forEach(function(todo) {
       rootElement.appendChild(createListElement(todo));
     });
   }
@@ -235,11 +213,11 @@ var yujinsSweetSweetTodoList = (function () {
     } else {
       newFilter = NONE;
     }
-    render(state);
+
     store.dispatch({
       type: CHANGE_FILTER,
-      payload: newFilter,
-    })
+      payload: newFilter
+    });
   }
 
   render(state);
@@ -250,12 +228,8 @@ var yujinsSweetSweetTodoList = (function () {
   activeBtn.addEventListener("click", handleFilterClick);
   removedBtn.addEventListener("click", handleFilterClick);
 
-  store.subscribe(function() {
-    var s = store.getState();
-    console.log("hey state updated", s)
-  })
+  store.subscribe(render);
 
-  
   return {
     createCheckboxElement: createCheckboxElement,
     createLabelElement: createLabelElement,
@@ -268,13 +242,11 @@ var yujinsSweetSweetTodoList = (function () {
  * TODO:
  * write tests
  * deploy to gh pages
- * learn and use redux?
- * 
+ *
  * discussion topics
  * how did we begin
- * what problems we are trying to solve 
- * global scope and modules 
- * IIFE 
- * 
+ * what problems we are trying to solve
+ * global scope and modules
+ * IIFE
+ *
  * */
-
